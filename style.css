@@ -2,5 +2,12 @@ body {
     margin: 0;
     overflow: hidden;
   }
-
+  #controls {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-radius: 5px;
+  }
   
