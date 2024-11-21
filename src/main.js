@@ -64,12 +64,12 @@ loader.load('scene.gltf', (gltf) => {
 // Environment map
 const cubeTextureLoader = new THREE.CubeTextureLoader();
 const environmentMap = cubeTextureLoader.load([
-  '/assets/textures/px.jpg',
-  '/assets/textures/nx.jpg',
-  '/assets/textures/py.jpg',
-  '/assets/textures/ny.jpg',
-  '/assets/textures/pz.jpg',
-  '/assets/textures/nz.jpg',
+  '/textures/px.jpg',
+  '/textures/nx.jpg',
+  '/textures/py.jpg',
+  '/textures/ny.jpg',
+  '/textures/pz.jpg',
+  '/textures/nz.jpg',
 ]);
 scene.environment = environmentMap;
 
