@@ -15,6 +15,7 @@ scene.background = new THREE.Color(0x87ceeb); // Lichte blauwe achtergrond
 // Camera setup
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0, 2, 5);
+camera.lookAt(0, 0, 0);
 
 // Lighting setup
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -24,6 +25,15 @@ const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 directionalLight.position.set(5, 10, 7.5);
 directionalLight.castShadow = true;
 scene.add(directionalLight);
+
+// add a circle on the ground to show the model over
+const circleGeometry = new THREE.CircleGeometry(2, 32);
+const circleMaterial = new THREE.MeshBasicMaterial({ color: 0xCE3D85 });
+const circle = new THREE.Mesh(circleGeometry, circleMaterial);
+circle.rotation.x = -Math.PI / 2;
+circle.position.y = 0.01;
+scene.add(circle);
+
 
 // Ground plane 
 const ground = new THREE.Mesh(
