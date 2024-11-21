@@ -51,7 +51,7 @@ ground.receiveShadow = true;
 scene.add(ground);
 
 // Load model GLTF
-const loader = new GLTFLoader().setPath('/public/models/pschoboy_sneaker/');
+const loader = new GLTFLoader().setPath('/models/pschoboy_sneaker/');
 loader.load('scene.gltf', (gltf) => {
   const model = gltf.scene;
   model.scale.set(0.08, 0.08, 0.08);
