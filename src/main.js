@@ -44,13 +44,27 @@ directionalLight.castShadow = true;
 scene.add(directionalLight);
 
 // Add a circle on the ground to show the model over
-const circleGeometry = new THREE.CircleGeometry(2, 32);
-const circleMaterial = new THREE.MeshBasicMaterial({ color: 0xCE3D85 });
-const circle = new THREE.Mesh(circleGeometry, circleMaterial);
-circle.rotation.x = -Math.PI / 2;
-circle.position.y = 0.01;
-scene.add(circle);
+//const circleGeometry = new THREE.CircleGeometry(2, 32);
+//const circleMaterial = new THREE.MeshBasicMaterial({ color: 0xCE3D85 });
+//const circle = new THREE.Mesh(circleGeometry, circleMaterial);
+//circle.rotation.x = -Math.PI / 2;
+//circle.position.y = 0.01;
+//scene.add(circle);
 
+// Load a 3D GLTF object to replace the circle
+const standLoader = new GLTFLoader().setPath('/models/statue_stand/');
+
+let groundModel;
+
+standLoader.load('scene.gltf', (gltf) => { 
+  groundModel = gltf.scene;
+  groundModel.scale.set(1, 1, 1); // Adjust the scale of the model
+  groundModel.position.set(0, -1, 0); // Slightly raise it above the ground
+  
+  scene.add(groundModel);
+
+  console.log("Stand loaded");
+});
 
 
 // Load model GLTF and make it hover
@@ -65,14 +79,13 @@ loader.load('scene.gltf', (gltf) => {
   sneakerModel.scale.set(0.08, 0.08, 0.08);
   sneakerModel.position.set(0, 0.4, 0);
   scene.add(sneakerModel);
-
   console.log("Model loaded");
 });
 
 // traverse trought the model to know wich layers are in the model
 loader.load('scene.gltf', (gltf) => {
   gltf.scene.traverse((child) => {
-    console.log(child.name);
+    //console.log(child.name);
   });
 });
 
