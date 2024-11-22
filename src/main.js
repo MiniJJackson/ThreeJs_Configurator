@@ -43,15 +43,12 @@ directionalLight.position.set(5, 10, 7.5);
 directionalLight.castShadow = true;
 scene.add(directionalLight);
 
-// Add a circle on the ground to show the model over
-//const circleGeometry = new THREE.CircleGeometry(2, 32);
-//const circleMaterial = new THREE.MeshBasicMaterial({ color: 0xCE3D85 });
-//const circle = new THREE.Mesh(circleGeometry, circleMaterial);
-//circle.rotation.x = -Math.PI / 2;
-//circle.position.y = 0.01;
-//scene.add(circle);
 
 // Load a 3D GLTF object to replace the circle
+
+const texture = textureLoader.load('/textures/marmer0.jpg'); // Replace with the correct texture path
+
+// Load the GLTF model
 const standLoader = new GLTFLoader().setPath('/models/statue_stand/');
 
 let groundModel;
@@ -59,11 +56,19 @@ let groundModel;
 standLoader.load('scene.gltf', (gltf) => { 
   groundModel = gltf.scene;
   groundModel.scale.set(1, 1, 1); // Adjust the scale of the model
-  groundModel.position.set(0, -1, 0); // Slightly raise it above the ground
-  
+  groundModel.position.set(0, -0.8, 0); // Slightly raise it above the ground
+
+  // Traverse through the model to apply the texture to all meshes
+  groundModel.traverse((child) => {
+    if (child.isMesh) {
+      child.material.map = texture; // Assign the texture to the material
+      child.material.needsUpdate = true; // Ensure the material updates with the new texture
+    }
+  });
+
   scene.add(groundModel);
 
-  console.log("Stand loaded");
+  console.log("Stand with texture loaded");
 });
 
 
