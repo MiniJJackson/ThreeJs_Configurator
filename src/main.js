@@ -12,7 +12,20 @@ document.body.appendChild(renderer.domElement);
 // Scene setup
 const scene = new THREE.Scene();
 
+// Add a cubemap as the scene background
+const cubeTextureLoader = new THREE.CubeTextureLoader();
+const cubeMap = cubeTextureLoader.load([
+  '/cubeMap/px.png',
+  '/cubeMap/nx.png',
+  '/cubeMap/py.png',
+  '/cubeMap/ny.png',
+  '/cubeMap/pz.png',
+  '/cubeMap/nz.png',
+]);
+scene.background = cubeMap;
+
 // Add a sphere to display the 360° texture
+/*
 const textureLoader = new THREE.TextureLoader();
 const sphereTexture = textureLoader.load('/textures/sky360.jpg'); // Replace with the path to your 360 image
 const sphereGeometry = new THREE.SphereGeometry(50, 64, 64);
@@ -22,6 +35,7 @@ const sphereMaterial = new THREE.MeshBasicMaterial({
 });
 const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
 scene.add(sphere);
+*/
 
 // Camera setup
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -50,10 +64,10 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-
 // Load a 3D GLTF object to replace the circle
 
-const texture = textureLoader.load('/textures/marmer0.jpg'); // Replace with the correct texture path
+const textureLoader = new THREE.TextureLoader();
+const texture = textureLoader.load('/textures/marmer0.jpg'); 
 
 // Load the GLTF model
 const standLoader = new GLTFLoader().setPath('/models/statue_stand/');
@@ -78,7 +92,6 @@ standLoader.load('scene.gltf', (gltf) => {
   console.log("Stand with texture loaded");
 });
 
-
 // Load model GLTF and make it hover
 const loader = new GLTFLoader().setPath('/models/pschoboy_sneaker/');
 let sneakerModel;
@@ -94,13 +107,12 @@ loader.load('scene.gltf', (gltf) => {
   console.log("Model loaded");
 });
 
-// traverse trought the model to know wich layers are in the model
+// traverse through the model to know which layers are in the model
 loader.load('scene.gltf', (gltf) => {
   gltf.scene.traverse((child) => {
     //console.log(child.name);
   });
 });
-
 
 // dat.GUI
 const gui = new dat.GUI();
