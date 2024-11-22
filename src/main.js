@@ -31,6 +31,7 @@ camera.lookAt(0, 0, 0);
 // Controls setup
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
+controls.maxPolarAngle = Math.PI / 2; // Prevent orbiting below the horizontal plane
 controls.update();
 
 // Lighting setup
@@ -50,14 +51,7 @@ circle.rotation.x = -Math.PI / 2;
 circle.position.y = 0.01;
 scene.add(circle);
 
-// Ground plane (optional)
-const ground = new THREE.Mesh(
-  new THREE.PlaneGeometry(20, 20),
-  new THREE.MeshStandardMaterial({ color: 0x808080 })
-);
-ground.rotation.x = -Math.PI / 2;
-ground.receiveShadow = true;
-// scene.add(ground);
+
 
 // Load model GLTF and make it hover
 const loader = new GLTFLoader().setPath('/models/pschoboy_sneaker/');
@@ -75,13 +69,21 @@ loader.load('scene.gltf', (gltf) => {
   console.log("Model loaded");
 });
 
+// traverse trought the model to know wich layers are in the model
+loader.load('scene.gltf', (gltf) => {
+  gltf.scene.traverse((child) => {
+    console.log(child.name);
+  });
+});
+
+
 // dat.GUI
 const gui = new dat.GUI();
 const lightFolder = gui.addFolder('Light Settings');
 lightFolder.add(directionalLight.position, 'x', -10, 10);
 lightFolder.add(directionalLight.position, 'y', -10, 10);
 lightFolder.add(directionalLight, 'intensity', 0, 2);
-lightFolder.open();
+lightFolder.close();
 
 // Animation loop
 function animate() {
