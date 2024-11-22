@@ -7,20 +7,23 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <header>
+    <img src="/public/logo/logo.png" alt="Logo" class="logo" height="80px">
+    <br>
+    <h1>Model Configurator</h1>
+  </header>
+  
   <div id="controls">
-    <h2>Model Configuratie</h2>
-    <div id="color-picker">
-      <div class="color-circle" data-color="#FF5733" style="background-color: #FF5733;"></div>
-      <div class="color-circle" data-color="#33FF57" style="background-color: #33FF57;"></div>
-      <div class="color-circle" data-color="#3357FF" style="background-color: #3357FF;"></div>
-      <div class="color-circle" data-color="#FFD700" style="background-color: #FFD700;"></div>
-      <div class="color-circle" data-color="#8A2BE2" style="background-color: #8A2BE2;"></div>
-      <div class="color-circle" data-color="#FF69B4" style="background-color: #FF69B4;"></div>
-      <div class="color-circle" data-color="#A52A2A" style="background-color: #A52A2A;"></div>
-      <div class="color-circle" data-color="#000000" style="background-color: #000000;"></div>
+    <h2>Change the laces</h2>
+    <div class="colors">
+      <a href="#" data-color="red" class="color"></a>
+      <a href="#" data-color="orange" class="color"></a>
+      <a href="#" data-color="yellow" class="color"></a>
+      <a href="#" data-color="green" class="color"></a>
+      <a href="#" data-color="blue" class="color"></a>
+      <a href="#" data-color="indigo" class="color"></a>
+      <a href="#" data-color="violet" class="color"></a>
     </div>
-    <!--<label for="scale">Schaal:</label>
-    <input type="range" id="scale" name="scale" min="0.5" max="2" step="0.1">-->
   </div>
   
   <script type="module" src="src/main.js"></script>
