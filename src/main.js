@@ -119,8 +119,8 @@ window.addEventListener('click', (event) => {
   const firstIntersect = intersects[0];
   
   // if name = Object_3
-  if (firstIntersect && firstIntersect.object.name === "Object_3") {
-    //alert('You clicked on the astronaut');
+  if (firstIntersect && firstIntersect.object.name === "laces") {
+    alert('You clicked on the astronaut');
     // current intersect
     currentIntersect = firstIntersect;
     // gsap animate Z position towards object
