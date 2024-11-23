@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import * as dat from 'dat.gui';
+import gsap from 'gsap';
 
 // Renderer setup
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -100,6 +101,42 @@ loader.load('scene.gltf', (gltf) => {
   gltf.scene.traverse((child) => {
     //console.log(child.name);
   });
+});
+
+
+// Raycaster 
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+let currentIntersect = null;
+
+// mouse click
+window.addEventListener('click', (event) => {
+  // raycatser
+  raycaster.setFromCamera(mouse, camera);
+
+  // intersect objects
+  const intersects = raycaster.intersectObjects(scene.children, true);
+  const firstIntersect = intersects[0];
+  
+  // if name = Object_3
+  if (firstIntersect && firstIntersect.object.name === "Object_3") {
+    //alert('You clicked on the astronaut');
+    // current intersect
+    currentIntersect = firstIntersect;
+    // gsap animate Z position towards object
+    gsap.to(camera.position, {
+      z: 2,
+      y: 1,
+      duration: 1,
+    });
+
+    // gsap animate .colors bottom to 0
+    gsap.to('.colors', {
+      bottom: 0,
+      duration: 1,
+    });
+  }
+
 });
 
 // mouse move
