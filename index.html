@@ -15,9 +15,9 @@
   
   <div class="controls">
     <div id="flexbox">
-      <a href="#" class="controls-arrow"> ← </a>
-      <h2>Change the laces</h2>
-      <a href="#" class="controls-arrow"> → </a>
+      <a href="#" class="controls-arrow" id="left-arrow"> ← </a>
+      <h2 id="main-text">Change the laces</h2>
+      <a href="#" class="controls-arrow" id="right-arrow"> → </a>
     </div>
     <div class="colors">
       <a href="#" data-color="red" class="color"></a>
@@ -30,6 +30,27 @@
     </div>
   </div>
   
-  <script type="module" src="src/main.js"></script>
+  <script>
+    // Get the arrows and h2 element
+    const leftArrow = document.getElementById('left-arrow');
+    const rightArrow = document.getElementById('right-arrow');
+    const mainText = document.getElementById('main-text');
+    
+    // Original and new text values
+    const originalText = 'Change the laces';
+    const newText = 'Change bottom shoe';
+
+    // Add click event listener to the right arrow
+    rightArrow.addEventListener('click', (event) => {
+      event.preventDefault(); // Prevent default link behavior
+      mainText.textContent = newText; // Change the h2 text
+    });
+
+    // Add click event listener to the left arrow
+    leftArrow.addEventListener('click', (event) => {
+      event.preventDefault(); // Prevent default link behavior
+      mainText.textContent = originalText; // Revert the h2 text
+    });
+  </script>
 </body>
 </html>
