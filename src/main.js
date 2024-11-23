@@ -27,7 +27,7 @@ scene.background = cubeMap;
 
 // Camera setup
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 2, 5);
+camera.position.set(0, 2, 7);
 camera.lookAt(0, 0, 0);
 
 // Controls setup
@@ -55,7 +55,7 @@ window.addEventListener('resize', () => {
 // Load a 3D GLTF object to replace the circle
 
 const textureLoader = new THREE.TextureLoader();
-const texture = textureLoader.load('/textures/marmer0.jpg'); 
+const texture = textureLoader.load('/textures/blueVelvet.jpg'); 
 
 // Load the GLTF model
 const standLoader = new GLTFLoader().setPath('/models/statue_stand/');
@@ -100,6 +100,13 @@ loader.load('scene.gltf', (gltf) => {
   gltf.scene.traverse((child) => {
     //console.log(child.name);
   });
+});
+
+// mouse move
+window.addEventListener('mousemove', (event) => {
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+  //console.log(mouse);
 });
 
 // dat.GUI
