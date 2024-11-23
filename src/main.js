@@ -24,18 +24,6 @@ const cubeMap = cubeTextureLoader.load([
 ]);
 scene.background = cubeMap;
 
-// Add a sphere to display the 360° texture
-/*
-const textureLoader = new THREE.TextureLoader();
-const sphereTexture = textureLoader.load('/textures/sky360.jpg'); // Replace with the path to your 360 image
-const sphereGeometry = new THREE.SphereGeometry(50, 64, 64);
-const sphereMaterial = new THREE.MeshBasicMaterial({
-  map: sphereTexture,
-  side: THREE.BackSide, // Render the inside of the sphere
-});
-const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-scene.add(sphere);
-*/
 
 // Camera setup
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
