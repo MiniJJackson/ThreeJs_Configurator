@@ -147,12 +147,12 @@ window.addEventListener('mousemove', (event) => {
 });
 
 // dat.GUI
-const gui = new dat.GUI();
-const lightFolder = gui.addFolder('Light Settings');
-lightFolder.add(directionalLight.position, 'x', -10, 10);
-lightFolder.add(directionalLight.position, 'y', -10, 10);
-lightFolder.add(directionalLight, 'intensity', 0, 2);
-lightFolder.close();
+//const gui = new dat.GUI();
+//const lightFolder = gui.addFolder('Light Settings');
+//lightFolder.add(directionalLight.position, 'x', -10, 10);
+//lightFolder.add(directionalLight.position, 'y', -10, 10);
+//lightFolder.add(directionalLight, 'intensity', 0, 2);
+//lightFolder.close();
 
 // Animation loop
 function animate() {
