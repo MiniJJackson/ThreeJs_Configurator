@@ -25,7 +25,6 @@ const cubeMap = cubeTextureLoader.load([
 ]);
 scene.background = cubeMap;
 
-
 // Camera setup
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0, 2, 7);
@@ -46,7 +45,7 @@ directionalLight.position.set(5, 10, 7.5);
 directionalLight.castShadow = true;
 scene.add(directionalLight);
 
-// responsive window
+// Responsive window
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
@@ -54,34 +53,32 @@ window.addEventListener('resize', () => {
 });
 
 // Load a 3D GLTF object to replace the circle
-
 const textureLoader = new THREE.TextureLoader();
-const texture = textureLoader.load('/textures/blueVelvet.jpg'); 
+const texture = textureLoader.load('/textures/blueVelvet.jpg');
 
-// Load the GLTF model
+// Load the GLTF model for the stand
 const standLoader = new GLTFLoader().setPath('/models/statue_stand/');
-
 let groundModel;
 
-standLoader.load('scene.gltf', (gltf) => { 
+standLoader.load('scene.gltf', (gltf) => {
   groundModel = gltf.scene;
   groundModel.scale.set(1, 1, 1); // Adjust the scale of the model
   groundModel.position.set(0, -0.8, 0); // Slightly raise it above the ground
 
-  // Traverse through the model to apply the texture to all meshes
+  // Traverse through the model to apply the texture and name meshes
   groundModel.traverse((child) => {
     if (child.isMesh) {
       child.material.map = texture; // Assign the texture to the material
       child.material.needsUpdate = true; // Ensure the material updates with the new texture
+      child.name = child.name || "defaultMaterial_23"; // Assign a default name if none exists
     }
   });
 
   scene.add(groundModel);
-
   console.log("Stand with texture loaded");
 });
 
-// Load model GLTF and make it hover
+// Load the sneaker model
 const loader = new GLTFLoader().setPath('/models/pschoboy_sneaker/');
 let sneakerModel;
 let hoverDirection = 1;
@@ -96,63 +93,73 @@ loader.load('scene.gltf', (gltf) => {
   console.log("Model loaded");
 });
 
-// traverse through the model to know which layers are in the model
+// Traverse and log object names for debugging
 loader.load('scene.gltf', (gltf) => {
   gltf.scene.traverse((child) => {
-    //console.log(child.name);
+    console.log(child.name);
   });
 });
 
-
-// Raycaster 
+// Raycaster setup
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 let currentIntersect = null;
 
-// mouse click
+// Mouse click event
 window.addEventListener('click', (event) => {
-  // raycatser
+  // Update mouse coordinates
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+  // Cast ray
   raycaster.setFromCamera(mouse, camera);
 
-  // intersect objects
+  // Intersect objects
   const intersects = raycaster.intersectObjects(scene.children, true);
-  const firstIntersect = intersects[0];
-  
-  // if name = Object_3
-  if (firstIntersect && firstIntersect.object.name === "laces") {
-    alert('You clicked on the astronaut');
-    // current intersect
-    currentIntersect = firstIntersect;
-    // gsap animate Z position towards object
-    gsap.to(camera.position, {
-      z: 2,
-      y: 1,
-      duration: 1,
-    });
+  console.log("Intersects:", intersects);
 
-    // gsap animate .colors bottom to 0
-    gsap.to('.colors', {
-      bottom: 0,
-      duration: 1,
-    });
+  if (intersects.length > 0) {
+    const firstIntersect = intersects[0];
+    console.log("Clicked object name:", firstIntersect.object.name);
+
+    // Check for the specific object name
+    if (firstIntersect.object.name === "defaultMaterial_17") {
+      alert('You clicked on the object!');
+      //gsap.to(camera.position, { z: 2, y: 1, duration: 1 });
+      //gsap.to('.colors', { bottom: 0, duration: 1 });
+
+      const object = firstIntersect.object;
+      object.material.color.set('red'); // Set the color to red
+    object.material.needsUpdate = true; // Ensure the material updates
+
+    }
   }
-
 });
 
-// mouse move
+// Mouse move event
 window.addEventListener('mousemove', (event) => {
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-  //console.log(mouse);
 });
 
-// dat.GUI
-//const gui = new dat.GUI();
-//const lightFolder = gui.addFolder('Light Settings');
-//lightFolder.add(directionalLight.position, 'x', -10, 10);
-//lightFolder.add(directionalLight.position, 'y', -10, 10);
-//lightFolder.add(directionalLight, 'intensity', 0, 2);
-//lightFolder.close();
+
+// loop over .color divs, add clic, when clicked get data-color
+document.querySelectorAll('.color').forEach((color) => {
+  color.addEventListener('click', (event) => {
+    // get data-color
+    const dataColor = event.target.dataset.color;
+
+    // change material color
+    if (currentIntersect) {
+      currentIntersect.object.material.color.set(dataColor);
+      // more metalness less ruffness
+      currentIntersect.object.material.metalness = 0.8;
+      currentIntersect.object.material.roughness = 0.5;
+
+    }
+  });
+});
+
 
 // Animation loop
 function animate() {
