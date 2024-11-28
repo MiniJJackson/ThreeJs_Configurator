@@ -60,26 +60,21 @@ const texture = textureLoader.load('/textures/blueVelvet.jpg');
 const standLoader = new GLTFLoader().setPath('/models/statue_stand/');
 let groundModel;
 
-standLoader.load('scene.gltf', (gltf) => {
+standLoader.load('statue_base_round1.glb', (gltf) => {
   groundModel = gltf.scene;
   groundModel.scale.set(1, 1, 1); // Adjust the scale of the model
   groundModel.position.set(0, -0.8, 0); // Slightly raise it above the ground
-
-  // Traverse through the model to apply the texture and name meshes
   groundModel.traverse((child) => {
     if (child.isMesh) {
-      child.material.map = texture; // Assign the texture to the material
-      child.material.needsUpdate = true; // Ensure the material updates with the new texture
-      child.name = child.name || "defaultMaterial_23"; // Assign a default name if none exists
+      child.material.map = texture; // Apply the texture to the material
     }
   });
-
   scene.add(groundModel);
   console.log("Stand with texture loaded");
 });
 
 // Load the sneaker model
-const loader = new GLTFLoader().setPath('/models/pschoboy_sneaker/');
+const loader = new GLTFLoader().setPath('/models/shoes_with_heart_heel/');
 let sneakerModel;
 let hoverDirection = 1;
 let hoverSpeed = 0.002;
@@ -87,9 +82,21 @@ let hoverHeight = 0.3;
 
 loader.load('scene.gltf', (gltf) => {
   sneakerModel = gltf.scene;
-  sneakerModel.scale.set(0.08, 0.08, 0.08);
-  sneakerModel.position.set(0, 0.4, 0);
+  sneakerModel.scale.set(0.35, 0.35, 0.35);
+  sneakerModel.position.set(0.6, 0.4, 0);
   scene.add(sneakerModel);
+
+  // Log all children for debugging
+  sneakerModel.traverse((child) => {
+    if (child.isMesh) {
+      console.log(`Mesh name: ${child.name}`);
+    }
+  });
+
+  sneakerModel.traverse((child) => {
+    console.log(`Object: ${child.name}, Layer: ${child.layers.mask}`);
+  });
+  
   console.log("Model loaded");
 });
 
@@ -100,41 +107,98 @@ loader.load('scene.gltf', (gltf) => {
   });
 });
 
+
+
 // Raycaster setup
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 let currentIntersect = null;
 
-// Mouse click event
+// mouse click
 window.addEventListener('click', (event) => {
-  // Update mouse coordinates
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-
-  // Cast ray
+  // raycatser
   raycaster.setFromCamera(mouse, camera);
 
-  // Intersect objects
+  // intersect objects
   const intersects = raycaster.intersectObjects(scene.children, true);
-  console.log("Intersects:", intersects);
+  const firstIntersect = intersects[0];
+  
+  // if name = Object_3
+  if (firstIntersect && firstIntersect.object.name === "Object_2") {
+    // current intersect
+    currentIntersect = firstIntersect;
+    // gsap animate Z position towards object
+    gsap.to(camera.position, {
+      z: 2,
+      y: 1,
+      duration: 1,
+    });
 
-  if (intersects.length > 0) {
-    const firstIntersect = intersects[0];
-    console.log("Clicked object name:", firstIntersect.object.name);
-
-    // Check for the specific object name
-    if (firstIntersect.object.name === "defaultMaterial_17") {
-      alert('You clicked on the object!');
-      //gsap.to(camera.position, { z: 2, y: 1, duration: 1 });
-      //gsap.to('.colors', { bottom: 0, duration: 1 });
-
-      const object = firstIntersect.object;
-      object.material.color.set('red'); // Set the color to red
-    object.material.needsUpdate = true; // Ensure the material updates
-
-    }
+    // gsap animate .colors bottom to 0
+    gsap.to('.colors', {
+      bottom: 0,
+      duration: 1,
+    });
   }
+
+  // if name = Object_3
+  if (firstIntersect && firstIntersect.object.name === "Object_3") {
+    // current intersect
+    currentIntersect = firstIntersect;
+    // gsap animate Z position towards object
+    gsap.to(camera.position, {
+      z: 2,
+      y: 1,
+      duration: 1,
+    });
+
+    // gsap animate .colors bottom to 0
+    gsap.to('.colors', {
+      bottom: 0,
+      duration: 1,
+    });
+  }
+
+  // if name = Object_3
+  if (firstIntersect && firstIntersect.object.name === "Object_4") {
+    //alert('You clicked on the astronaut');
+    // current intersect
+    currentIntersect = firstIntersect;
+    // gsap animate Z position towards object
+    gsap.to(camera.position, {
+      z: 2,
+      y: 1,
+      duration: 1,
+    });
+
+    // gsap animate .colors bottom to 0
+    gsap.to('.colors', {
+      bottom: 0,
+      duration: 1,
+    });
+  }
+
+  // if name = Object_3
+  if (firstIntersect && firstIntersect.object.name === "Object_5") {
+    //alert('You clicked on the astronaut');
+    // current intersect
+    currentIntersect = firstIntersect;
+    // gsap animate Z position towards object
+    gsap.to(camera.position, {
+      z: 2,
+      y: 1,
+      duration: 1,
+    });
+
+    // gsap animate .colors bottom to 0
+    gsap.to('.colors', {
+      bottom: 0,
+      duration: 1,
+    });
+  }
+
 });
+
 
 // Mouse move event
 window.addEventListener('mousemove', (event) => {
@@ -159,6 +223,7 @@ document.querySelectorAll('.color').forEach((color) => {
     }
   });
 });
+
 
 
 // Animation loop
