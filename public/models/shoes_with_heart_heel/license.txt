@@ -1,0 +1,11 @@
+Model Information:
+* title:	Shoes with Heart Heel
+* source:	https://sketchfab.com/3d-models/shoes-with-heart-heel-437aa3a7b8dc4bcaa0634df4ce0f8edb
+* author:	Tillikara (https://sketchfab.com/Tillikara)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Shoes with Heart Heel" (https://sketchfab.com/3d-models/shoes-with-heart-heel-437aa3a7b8dc4bcaa0634df4ce0f8edb) by Tillikara (https://sketchfab.com/Tillikara) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
