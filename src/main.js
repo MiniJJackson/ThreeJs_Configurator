@@ -25,6 +25,24 @@ const cubeMap = cubeTextureLoader.load([
 ]);
 scene.background = cubeMap;
 
+// Load textures for materials
+const textureLoader = new THREE.TextureLoader();
+const materials = {
+  army: textureLoader.load('/shoeMaterial/army.jpg'),
+  crocodile: textureLoader.load('/shoeMaterial/crocodile.jpg'),
+  glitter: textureLoader.load('/shoeMaterial/glitter.jpg'),
+  leather: textureLoader.load('/shoeMaterial/leather.jpg'),
+  leopard: textureLoader.load('/shoeMaterial/leopard.jpg'),
+};
+
+// Mapping of object names to descriptive names
+const objectNameMapping = {
+  "Object_2": " insole and ankle band",
+  "Object_3": "heart and heel",
+  "Object_4": "straps",
+  "Object_5": "sole"
+};
+
 // Camera setup
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0, 2, 7);
@@ -34,7 +52,14 @@ camera.lookAt(0, 0, 0);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.maxPolarAngle = Math.PI / 2;
-controls.minDistance = controls.maxDistance = 7;
+
+// Set minimum and maximum zoom distances
+controls.minDistance = 5; // Minimum distance to zoom in
+controls.maxDistance = 10; // Maximum distance to zoom out
+
+// Disable panning with the right mouse button
+controls.enablePan = false;
+
 controls.update();
 
 
@@ -58,167 +83,126 @@ window.addEventListener('resize', () => {
 const standLoader = new GLTFLoader().setPath('/models/pillar/');
 let groundModel;
 
-standLoader.load('marble_pillar.glb', (gltf) => { // Replace with your new GLB file name
+standLoader.load('marble_pillar.glb', (gltf) => {
   groundModel = gltf.scene;
-  groundModel.scale.set(0.3, 0.3, 0.3); // Adjust the scale of the model if necessary
-  groundModel.position.set(0, -0.8, 0); // Slightly raise it above the ground
-
-  // Add the ground model to the scene
+  groundModel.scale.set(0.3, 0.3, 0.3);
+  groundModel.position.set(0, -0.8, 0);
   scene.add(groundModel);
 });
 
 // Load the sneaker model
 const loader = new GLTFLoader().setPath('/models/shoes_with_heart_heel/');
 let sneakerModel;
-let hoverDirection = 1;
-let hoverSpeed = 0.002;
-let hoverHeight = 0.3;
 
 loader.load('scene.gltf', (gltf) => {
   sneakerModel = gltf.scene;
   sneakerModel.scale.set(0.35, 0.35, 0.35);
-  sneakerModel.position.set(0.6, 0.4, 0);
+  sneakerModel.position.set(0.6, 0, 0);
   scene.add(sneakerModel);
+  console.log("Model loaded");
 
-  // Log all children for debugging
-  sneakerModel.traverse((child) => {
+  // Set the default color to white when the model is loaded
+  setDefaultColor(sneakerModel);
+
+  // Initialize the first object only after the sneaker model is loaded
+  setCurrentObject();
+});
+
+// Step-wise interaction management
+const objectsInOrder = ["Object_2", "Object_3", "Object_4", "Object_5"]; // Replace with your actual object names
+let currentStep = 0; // Keep track of the current object step
+let currentIntersect = null; // Current object to interact with
+
+function setDefaultColor(model) {
+  model.traverse((child) => {
     if (child.isMesh) {
-      console.log(`Mesh name: ${child.name}`);
+      child.material.color.set(0xffffff); // Set to white
     }
   });
+}
 
-  sneakerModel.traverse((child) => {
-    console.log(`Object: ${child.name}, Layer: ${child.layers.mask}`);
-  });
+// Function to set the current object for interaction
+function setCurrentObject() {
+  // Hide all color/material selectors initially
+  document.querySelectorAll('.color').forEach(color => color.style.display = 'none');
+  document.getElementById('material-select').style.display = 'none';
 
-  console.log("Model loaded");
+  // Get the name of the current object to interact with
+  const currentObjectName = objectsInOrder[currentStep];
+  const currentObject = sneakerModel.getObjectByName(currentObjectName);
+
+  if (currentObject) {
+    // Show color/material selectors for the current object
+    document.querySelectorAll('.color').forEach(color => color.style.display = 'block');
+    document.getElementById('material-select').style.display = 'block';
+
+    // Set currentIntersect as the current object for later use
+    currentIntersect = currentObject;
+
+    // Update the main text to reflect the current object using the mapping
+    document.getElementById('main-text').innerText = `Edit  ${objectNameMapping[currentObjectName] || currentObjectName}`;
+
+    // Log the current object name
+    console.log(`Interacting with: ${currentObjectName}`);
+  }
+}
+
+// Set up click event for the next object
+document.getElementById('next-button').addEventListener('click', () => {
+  if (currentStep < objectsInOrder.length - 1) {
+    currentStep++;
+    setCurrentObject();
+  } else {
+    console.log("No more objects to interact with.");
+  }
 });
 
-// Traverse and log object names for debugging
-loader.load('scene.gltf', (gltf) => {
-  gltf.scene.traverse((child) => {
-    console.log(child.name);
-  });
+// Set up click event for the previous object
+document.getElementById('prev-button').addEventListener('click', () => {
+  if (currentStep > 0) {
+    currentStep--;
+    setCurrentObject();
+  } else {
+    console.log("No previous objects to interact with.");
+  }
 });
 
-
-
-// Raycaster setup
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
-let currentIntersect = null;
-
-// mouse click
-window.addEventListener('click', (event) => {
-  // raycatser
-  raycaster.setFromCamera(mouse, camera);
-
-  // intersect objects
-  const intersects = raycaster.intersectObjects(scene.children, true);
-  const firstIntersect = intersects[0];
-
-  // if name = Object_3
-  if (firstIntersect && firstIntersect.object.name === "Object_2") {
-    // current intersect
-    currentIntersect = firstIntersect;
-    // gsap animate Z position towards object
-    gsap.to(camera.position, {
-      z: 2,
-      y: 1,
-      duration: 1,
-    });
-
-    // gsap animate .colors bottom to 0
-    gsap.to('.colors', {
-      bottom: 0,
-      duration: 1,
-    });
-  }
-
-  // if name = Object_3
-  if (firstIntersect && firstIntersect.object.name === "Object_3") {
-    // current intersect
-    currentIntersect = firstIntersect;
-    // gsap animate Z position towards object
-    gsap.to(camera.position, {
-      z: 2,
-      y: 1,
-      duration: 1,
-    });
-
-    // gsap animate .colors bottom to 0
-    gsap.to('.colors', {
-      bottom: 0,
-      duration: 1,
-    });
-  }
-
-  // if name = Object_3
-  if (firstIntersect && firstIntersect.object.name === "Object_4") {
-    //alert('You clicked on the astronaut');
-    // current intersect
-    currentIntersect = firstIntersect;
-    // gsap animate Z position towards object
-    gsap.to(camera.position, {
-      z: 2,
-      y: 1,
-      duration: 1,
-    });
-
-    // gsap animate .colors bottom to 0
-    gsap.to('.colors', {
-      bottom: 0,
-      duration: 1,
-    });
-  }
-
-  // if name = Object_3
-  if (firstIntersect && firstIntersect.object.name === "Object_5") {
-    //alert('You clicked on the astronaut');
-    // current intersect
-    currentIntersect = firstIntersect;
-    // gsap animate Z position towards object
-    gsap.to(camera.position, {
-      z: 2,
-      y: 1,
-      duration: 1,
-    });
-
-    // gsap animate .colors bottom to 0
-    gsap.to('.colors', {
-      bottom: 0,
-      duration: 1,
-    });
-  }
-
-});
-
-
-// Mouse move event
-window.addEventListener('mousemove', (event) => {
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-});
-
-
-// loop over .color divs, add clic, when clicked get data-color
+// Color change for sneaker only
 document.querySelectorAll('.color').forEach((color) => {
   color.addEventListener('click', (event) => {
-    // get data-color
     const dataColor = event.target.dataset.color;
-
-    // change material color
     if (currentIntersect) {
-      currentIntersect.object.material.color.set(dataColor);
-      // more metalness less ruffness
-      currentIntersect.object.material.metalness = 0.8;
-      currentIntersect.object.material.roughness = 0.5;
-
+      // Set the color based on the selected option
+      if (dataColor === 'none') {
+        // If 'No Color' is selected, you can choose to keep the existing material or set a default
+        currentIntersect.material.color.set(0xffffff); // Set to white or keep current
+      } else {
+        // Set the color based on other selected colors
+        currentIntersect.material.color.set(dataColor);
+      }
     }
   });
 });
 
+// Material change for sneaker only
+const materialSelect = document.getElementById('material-select');
+materialSelect.addEventListener('change', (event) => {
+  const selectedMaterial = event.target.value;
+  if (currentIntersect) {
+    if (selectedMaterial === 'none') {
+      currentIntersect.material.map = null; // Clear the texture
+      currentIntersect.material.needsUpdate = true;
+    } else if (materials[selectedMaterial]) {
+      const newMaterial = new THREE.MeshStandardMaterial({ map: materials[selectedMaterial] });
+      currentIntersect.material = newMaterial;
+    }
+  }
+});
 
+// Animation for the sneaker model
+let hoverDirection = 1;
+let hoverSpeed = 0.002;
+let hoverHeight = 0.3; // The maximum height hover
 
 // Animation loop
 function animate() {
@@ -227,8 +211,9 @@ function animate() {
   // Update hover animation for the sneaker model
   if (sneakerModel) {
     sneakerModel.position.y += hoverSpeed * hoverDirection;
-    if (sneakerModel.position.y >= 0.4 + hoverHeight || sneakerModel.position.y <= 0.4) {
-      hoverDirection *= -1;
+    // Update the hover bounds based on the new initial position
+    if (sneakerModel.position.y >= 0 + hoverHeight || sneakerModel.position.y <= 0) {
+      hoverDirection *= -1; // Reverse the hover direction
     }
   }
 
