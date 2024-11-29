@@ -141,6 +141,9 @@ loader.load('scene.gltf', (gltf) => {
   sneakerModel.scale.set(0.45, 0.45, 0.45);
   sneakerModel.position.set(0.6, -1, 0);
 
+   // Store the initial Y position for hover animation
+   initialY = sneakerModel.position.y;
+
   // Ensure the sneaker model casts shadows
   sneakerModel.traverse((child) => {
     if (child.isMesh) {
@@ -249,10 +252,11 @@ materialSelect.addEventListener('change', (event) => {
   }
 });
 
-// Animation for the sneaker model
-let hoverDirection = 1;
-let hoverSpeed = 0.002;
-let hoverHeight = 0.3; // The maximum height hover
+// Animation variables
+let hoverDirection = 1; // 1 for up, -1 for down
+let hoverSpeed = 0.002; // Speed of hover
+let hoverHeight = 0.3;  // The maximum height the sneaker hovers above its initial position
+let initialY = 0;       // Placeholder for the initial Y position of the sneaker
 
 // Animation loop
 function animate() {
@@ -260,9 +264,9 @@ function animate() {
 
   // Update hover animation for the sneaker model
   if (sneakerModel) {
+    // Adjust the position within bounds
     sneakerModel.position.y += hoverSpeed * hoverDirection;
-    // Update the hover bounds based on the new initial position
-    if (sneakerModel.position.y >= 0 + hoverHeight || sneakerModel.position.y <= 0) {
+    if (sneakerModel.position.y >= initialY + hoverHeight || sneakerModel.position.y <= initialY) {
       hoverDirection *= -1; // Reverse the hover direction
     }
   }
