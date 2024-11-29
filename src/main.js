@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import * as dat from 'dat.gui';
 import gsap from 'gsap';
 
 // Renderer setup
@@ -44,21 +45,16 @@ const objectNameMapping = {
 
 // Camera setup
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 2, 7);
-camera.lookAt(0, 0, 0);
+camera.position.set(0, 0, 5); // Increased Y value for more height
+camera.lookAt(0, 0, 0); // Still looking at the origin
 
 // Controls setup
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
-controls.maxPolarAngle = Math.PI / 2;
-
-// Set minimum and maximum zoom distances
-controls.minDistance = 5; // Minimum distance to zoom in
-controls.maxDistance = 10; // Maximum distance to zoom out
-
-// Disable panning with the right mouse button
-controls.enablePan = false;
-
+controls.maxPolarAngle = Math.PI / 2; // Maximum angle from the top
+controls.minPolarAngle = Math.PI / 2; // Minimum angle to restrict vertical movement
+controls.enableZoom = false; // Disable zoom functionality
+controls.enablePan = false; // Disable panning with the right mouse button
 controls.update();
 
 // Lighting setup
@@ -82,15 +78,15 @@ directionalLight.shadow.camera.bottom = -10;     // Adjust shadow camera's botto
 scene.add(directionalLight);
 
 // Additional light to illuminate the backside of the shoe
-const backLight = new THREE.PointLight(0xffffff, 5, 10); // White light, intensity, distance
-backLight.position.set(-2, 2, -3); // Adjust the position to illuminate the back of the shoe
-backLight.castShadow = false; // Disable shadows for this light
+const backLight = new THREE.PointLight(0xffffff, 5, 10); 
+backLight.position.set(-2, 2, -3); 
+backLight.castShadow = false; 
 scene.add(backLight);
 
 // Additional light to illuminate the front side of the shoe
-const frontLight = new THREE.PointLight(0xffffff, 5, 10); // White light, intensity, distance
-frontLight.position.set(-4, 2, 2); // Adjust the position to illuminate the front of the shoe
-frontLight.castShadow = false; // Disable shadows for this light
+const frontLight = new THREE.PointLight(0xffffff, 5, 10);
+frontLight.position.set(-4, 2, 2); 
+frontLight.castShadow = false; 
 scene.add(frontLight);
 
 // Responsive window
@@ -107,7 +103,7 @@ let groundModel;
 standLoader.load('marble_pillar.glb', (gltf) => {
   groundModel = gltf.scene;
   groundModel.scale.set(0.3, 0.3, 0.3);
-  groundModel.position.set(0, -0.8, 0);
+  groundModel.position.set(0, -1.5, 0);
 
   // Load the marble texture
   const textureLoader = new THREE.TextureLoader();
@@ -142,8 +138,8 @@ let sneakerModel;
 
 loader.load('scene.gltf', (gltf) => {
   sneakerModel = gltf.scene;
-  sneakerModel.scale.set(0.35, 0.35, 0.35);
-  sneakerModel.position.set(0.6, 0, 0);
+  sneakerModel.scale.set(0.45, 0.45, 0.45);
+  sneakerModel.position.set(0.6, -1, 0);
 
   // Ensure the sneaker model casts shadows
   sneakerModel.traverse((child) => {
