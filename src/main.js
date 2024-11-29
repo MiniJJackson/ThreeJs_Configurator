@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import * as dat from 'dat.gui';
 import gsap from 'gsap';
 
 // Renderer setup
@@ -62,7 +61,6 @@ controls.enablePan = false;
 
 controls.update();
 
-
 // Lighting setup
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
@@ -70,7 +68,30 @@ scene.add(ambientLight);
 const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 directionalLight.position.set(5, 10, 7.5);
 directionalLight.castShadow = true;
+
+// Adjust shadow properties
+directionalLight.shadow.mapSize.width = 2048;  // Increase shadow map size for better quality
+directionalLight.shadow.mapSize.height = 2048; // Increase shadow map size for better quality
+directionalLight.shadow.camera.near = 0.5;      // Near plane of the shadow camera
+directionalLight.shadow.camera.far = 50;        // Far plane of the shadow camera
+directionalLight.shadow.camera.left = -10;      // Adjust shadow camera's left side
+directionalLight.shadow.camera.right = 10;      // Adjust shadow camera's right side
+directionalLight.shadow.camera.top = 10;         // Adjust shadow camera's top side
+directionalLight.shadow.camera.bottom = -10;     // Adjust shadow camera's bottom side
+
 scene.add(directionalLight);
+
+// Additional light to illuminate the backside of the shoe
+const backLight = new THREE.PointLight(0xffffff, 5, 10); // White light, intensity, distance
+backLight.position.set(-2, 2, -3); // Adjust the position to illuminate the back of the shoe
+backLight.castShadow = false; // Disable shadows for this light
+scene.add(backLight);
+
+// Additional light to illuminate the front side of the shoe
+const frontLight = new THREE.PointLight(0xffffff, 5, 10); // White light, intensity, distance
+frontLight.position.set(-4, 2, 2); // Adjust the position to illuminate the front of the shoe
+frontLight.castShadow = false; // Disable shadows for this light
+scene.add(frontLight);
 
 // Responsive window
 window.addEventListener('resize', () => {
@@ -87,6 +108,31 @@ standLoader.load('marble_pillar.glb', (gltf) => {
   groundModel = gltf.scene;
   groundModel.scale.set(0.3, 0.3, 0.3);
   groundModel.position.set(0, -0.8, 0);
+
+  // Load the marble texture
+  const textureLoader = new THREE.TextureLoader();
+  const marbleTexture = textureLoader.load('/textures/marmer.jpg', (texture) => {
+    // Set texture properties if needed
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping; 
+    texture.repeat.set(1, 1);  
+  });
+
+  // Create a new material for the pillar using the loaded texture
+  const marbleMaterial = new THREE.MeshStandardMaterial({
+    map: marbleTexture, 
+    metalness: 0,
+    roughness: 0.8,
+  });
+
+  // Traverse through the pillar model and apply the new material
+  groundModel.traverse((child) => {
+    if (child.isMesh) {
+      child.material = marbleMaterial;
+      child.receiveShadow = true;
+    }
+  });
+
   scene.add(groundModel);
 });
 
@@ -98,6 +144,14 @@ loader.load('scene.gltf', (gltf) => {
   sneakerModel = gltf.scene;
   sneakerModel.scale.set(0.35, 0.35, 0.35);
   sneakerModel.position.set(0.6, 0, 0);
+
+  // Ensure the sneaker model casts shadows
+  sneakerModel.traverse((child) => {
+    if (child.isMesh) {
+      child.castShadow = true; // Enable shadow casting for the sneaker
+    }
+  });
+
   scene.add(sneakerModel);
   console.log("Model loaded");
 
