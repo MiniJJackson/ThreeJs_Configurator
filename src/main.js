@@ -33,8 +33,8 @@ camera.lookAt(0, 0, 0);
 // Controls setup
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
-controls.maxPolarAngle = Math.PI / 2; // Prevent orbiting below the horizontal plane
-controls.enablePan = false; // Disable panning with right mouse button
+controls.maxPolarAngle = Math.PI / 2;
+controls.minDistance = controls.maxDistance = 7;
 controls.update();
 
 
@@ -62,7 +62,7 @@ standLoader.load('marble_pillar.glb', (gltf) => { // Replace with your new GLB f
   groundModel = gltf.scene;
   groundModel.scale.set(0.3, 0.3, 0.3); // Adjust the scale of the model if necessary
   groundModel.position.set(0, -0.8, 0); // Slightly raise it above the ground
-  
+
   // Add the ground model to the scene
   scene.add(groundModel);
 });
@@ -90,7 +90,7 @@ loader.load('scene.gltf', (gltf) => {
   sneakerModel.traverse((child) => {
     console.log(`Object: ${child.name}, Layer: ${child.layers.mask}`);
   });
-  
+
   console.log("Model loaded");
 });
 
@@ -116,7 +116,7 @@ window.addEventListener('click', (event) => {
   // intersect objects
   const intersects = raycaster.intersectObjects(scene.children, true);
   const firstIntersect = intersects[0];
-  
+
   // if name = Object_3
   if (firstIntersect && firstIntersect.object.name === "Object_2") {
     // current intersect
