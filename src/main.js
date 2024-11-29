@@ -52,25 +52,17 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// Load a 3D GLTF object to replace the circle
-const textureLoader = new THREE.TextureLoader();
-const texture = textureLoader.load('/textures/blueVelvet.jpg');
-
-// Load the GLTF model for the stand
-const standLoader = new GLTFLoader().setPath('/models/statue_stand/');
+// Load the GLTF model for the pillar
+const standLoader = new GLTFLoader().setPath('/models/pillar/');
 let groundModel;
 
-standLoader.load('statue_base_round1.glb', (gltf) => {
+standLoader.load('marble_pillar.glb', (gltf) => { // Replace with your new GLB file name
   groundModel = gltf.scene;
-  groundModel.scale.set(1, 1, 1); // Adjust the scale of the model
+  groundModel.scale.set(0.3, 0.3, 0.3); // Adjust the scale of the model if necessary
   groundModel.position.set(0, -0.8, 0); // Slightly raise it above the ground
-  groundModel.traverse((child) => {
-    if (child.isMesh) {
-      child.material.map = texture; // Apply the texture to the material
-    }
-  });
+  
+  // Add the ground model to the scene
   scene.add(groundModel);
-  console.log("Stand with texture loaded");
 });
 
 // Load the sneaker model
