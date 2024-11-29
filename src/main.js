@@ -34,7 +34,9 @@ camera.lookAt(0, 0, 0);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.maxPolarAngle = Math.PI / 2; // Prevent orbiting below the horizontal plane
+controls.enablePan = false; // Disable panning with right mouse button
 controls.update();
+
 
 // Lighting setup
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
