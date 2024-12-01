@@ -6,6 +6,28 @@ import gsap from 'gsap';
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
+// define colors for random generated shoe
+const colors = [
+  0xffffff, // white
+  0xff0000, // red
+  0xffa500, // orange
+  0xffff00, // yellow
+  0x008000, // green
+  0x0000ff, // blue
+  0x4b0082, // indigo
+  0x9400d3, // violet
+  0xffc0cb, // pink
+  0x000000, // black
+  0x808080  // gray
+];
+
+// get random color generator function
+function getRandomColor() {
+  const randomIndex = Math.floor(Math.random() * colors.length);
+  return colors[randomIndex];
+}
+
+// Variables for hover animation
 let initialY = 0;
 
 // Renderer setup
@@ -188,11 +210,16 @@ loader.load('scene.gltf', (gltf) => {
     }
   });
 
-  scene.add(sneakerModel);
-  console.log("Model loaded");
+  // Apply a random color to the sneaker model
+  sneakerModel.traverse((child) => {
+    if (child.isMesh) {
+      const randomColor = getRandomColor(); // Get a random color
+      child.material.color.set(randomColor); // Set the random color
+    }
+  });
 
-  // Set the default color to white when the model is loaded
-  setDefaultColor(sneakerModel);
+  scene.add(sneakerModel); // Add the model to the scene
+  console.log("Model loaded");
 
   // Initialize the first object only after the sneaker model is loaded
   setCurrentObject();
