@@ -6,6 +6,7 @@ import gsap from 'gsap';
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
+let initialY = 0;
 
 // Renderer setup
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -81,15 +82,15 @@ directionalLight.shadow.camera.bottom = -10;     // Adjust shadow camera's botto
 scene.add(directionalLight);
 
 // Additional light to illuminate the backside of the shoe
-const backLight = new THREE.PointLight(0xffffff, 5, 10); 
-backLight.position.set(-2, 2, -3); 
-backLight.castShadow = false; 
+const backLight = new THREE.PointLight(0xffffff, 5, 10);
+backLight.position.set(-2, 2, -3);
+backLight.castShadow = false;
 scene.add(backLight);
 
 // Additional light to illuminate the front side of the shoe
 const frontLight = new THREE.PointLight(0xffffff, 5, 10);
-frontLight.position.set(-4, 2, 2); 
-frontLight.castShadow = false; 
+frontLight.position.set(-4, 2, 2);
+frontLight.castShadow = false;
 scene.add(frontLight);
 
 // Responsive window
@@ -146,13 +147,13 @@ standLoader.load('marble_pillar.glb', (gltf) => {
   const marbleTexture = textureLoader.load('/textures/marmer.jpg', (texture) => {
     // Set texture properties if needed
     texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping; 
-    texture.repeat.set(1, 1);  
+    texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(1, 1);
   });
 
   // Create a new material for the pillar using the loaded texture
   const marbleMaterial = new THREE.MeshStandardMaterial({
-    map: marbleTexture, 
+    map: marbleTexture,
     metalness: 0,
     roughness: 0.8,
   });
@@ -177,8 +178,8 @@ loader.load('scene.gltf', (gltf) => {
   sneakerModel.scale.set(0.45, 0.45, 0.45);
   sneakerModel.position.set(0.6, -1, 0);
 
-   // Store the initial Y position for hover animation
-   initialY = sneakerModel.position.y;
+  // Store the initial Y position for hover animation
+  initialY = sneakerModel.position.y;
 
   // Ensure the sneaker model casts shadows
   sneakerModel.traverse((child) => {
@@ -210,11 +211,44 @@ function setDefaultColor(model) {
   });
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+  const materialButton = document.getElementById('material-button');
+  const colorsDiv = document.querySelector('.colors');
+  const materialsDisplay = document.querySelector('.materials-display');
+
+  materialButton.addEventListener('click', () => {
+    // Toggle visibility
+    if (colorsDiv.style.display === 'none') {
+      colorsDiv.style.display = 'flex'; // Show colors
+      materialsDisplay.style.display = 'none'; // Hide materials
+    } else {
+      colorsDiv.style.display = 'none'; // Hide colors
+      materialsDisplay.style.display = 'flex'; // Show materials
+    }
+  });
+});
+
+// After sneakerModel is loaded and currentObject is set, add event listeners for materials
+document.querySelectorAll('.materials-display .material').forEach((materialLink) => {
+  materialLink.addEventListener('click', (event) => {
+    event.preventDefault(); // Prevent the default anchor behavior
+    const selectedMaterial = event.target.dataset.material;
+    if (currentIntersect) {
+      if (selectedMaterial === 'none') {
+        currentIntersect.material.map = null; // Clear the texture
+        currentIntersect.material.needsUpdate = true;
+      } else if (materials[selectedMaterial]) {
+        const newMaterial = new THREE.MeshStandardMaterial({ map: materials[selectedMaterial] });
+        currentIntersect.material = newMaterial;
+      }
+    }
+  });
+});
+
 // Function to set the current object for interaction
 function setCurrentObject() {
   // Hide all color/material selectors initially
   document.querySelectorAll('.color').forEach(color => color.style.display = 'none');
-  document.getElementById('material-select').style.display = 'none';
 
   // Get the name of the current object to interact with
   const currentObjectName = objectsInOrder[currentStep];
@@ -223,7 +257,6 @@ function setCurrentObject() {
   if (currentObject) {
     // Show color/material selectors for the current object
     document.querySelectorAll('.color').forEach(color => color.style.display = 'block');
-    document.getElementById('material-select').style.display = 'block';
 
     // Set currentIntersect as the current object for later use
     currentIntersect = currentObject;
@@ -273,26 +306,10 @@ document.querySelectorAll('.color').forEach((color) => {
   });
 });
 
-// Material change for sneaker only
-const materialSelect = document.getElementById('material-select');
-materialSelect.addEventListener('change', (event) => {
-  const selectedMaterial = event.target.value;
-  if (currentIntersect) {
-    if (selectedMaterial === 'none') {
-      currentIntersect.material.map = null; // Clear the texture
-      currentIntersect.material.needsUpdate = true;
-    } else if (materials[selectedMaterial]) {
-      const newMaterial = new THREE.MeshStandardMaterial({ map: materials[selectedMaterial] });
-      currentIntersect.material = newMaterial;
-    }
-  }
-});
-
 // Animation variables
-let hoverDirection = 1; // 1 for up, -1 for down
-let hoverSpeed = 0.002; // Speed of hover
-let hoverHeight = 0.3;  // The maximum height the sneaker hovers above its initial position
-let initialY = 0;       // Placeholder for the initial Y position of the sneaker
+let hoverDirection = 1;
+let hoverSpeed = 0.002;
+let hoverHeight = 0.3;
 
 // Animation loop
 function animate() {
