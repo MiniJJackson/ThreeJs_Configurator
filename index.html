@@ -16,42 +16,39 @@
   <div class="schoe-configurator">
     <div class="configurator">
       <div class="configurator-settings">
-        <!-- Main text indicating current layer -->
-        <button id="prev-button">Previous</button>
-        <h1 id="main-text">Select an option</h1>
-
-        <!-- Color Selection -->
+        <div class="top-bar">
+          <button id="prev-button">Previous</button>
+          <h1 id="main-text">Edit Layer</h1>
+          <div class="materials">
+            <label for="material-select">Material:</label>
+            <select id="material-select">
+              <option value="none">None</option>
+              <option value="army">Army</option>
+              <option value="crocodile">Crocodile</option>
+              <option value="glitter">Glitter</option>
+              <option value="leather">Leather</option>
+              <option value="leopard">Leopard</option>
+            </select>
+          </div>
+          <button id="next-button">Next</button>
+        </div>
         <div class="colors">
-          <a href="#" data-color="white" class="color" style="background-color: white; border: 1px solid black;"></a>
-          <a href="#" data-color="red" class="color" style="background-color: red;"></a>
-          <a href="#" data-color="orange" class="color" style="background-color: orange;"></a>
-          <a href="#" data-color="yellow" class="color" style="background-color: yellow;"></a>
-          <a href="#" data-color="green" class="color" style="background-color: green;"></a>
-          <a href="#" data-color="blue" class="color" style="background-color: blue;"></a>
-          <a href="#" data-color="indigo" class="color" style="background-color: indigo;"></a>
-          <a href="#" data-color="violet" class="color" style="background-color: violet;"></a>
+          <a href="#" data-color="white" class="color"></a>
+          <a href="#" data-color="red" class="color"></a>
+          <a href="#" data-color="orange" class="color"></a>
+          <a href="#" data-color="yellow" class="color"></a>
+          <a href="#" data-color="green" class="color"></a>
+          <a href="#" data-color="blue" class="color"></a>
+          <a href="#" data-color="indigo" class="color"></a>
+          <a href="#" data-color="violet" class="color"></a>
+          <a href="#" data-color="pink" class="color"></a>
+          <a href="#" data-color="black" class="color"></a>
+          <a href="#" data-color="gray" class="color"></a>
         </div>
-
-        <!-- Material Selection Dropdown -->
-        <div class="materials">
-          <label for="material-select">Select Material:</label>
-          <select id="material-select">
-            <option value="none">None</option>
-            <option value="army">Army</option>
-            <option value="crocodile">Crocodile</option>
-            <option value="glitter">Glitter</option>
-            <option value="leather">Leather</option>
-            <option value="leopard">Leopard</option>
-          </select>
-        </div>
-
-        <button id="next-button">Next</button>
-        
       </div>
     </div>
-  </div>
 
-  <script type="module" src="src/main.js"></script>
+    <script type="module" src="src/main.js"></script>
 </body>
 
 </html>
