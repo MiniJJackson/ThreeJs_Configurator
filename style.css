@@ -48,7 +48,8 @@ h1 {
 }
 
 #prev-button,
-#next-button {
+#next-button,
+#material-button {
   padding: 10px 15px;
   font-size: 16px;
   cursor: pointer;
@@ -142,4 +143,53 @@ h1#main-text {
 
 .color[data-color="gray"] {
   background-color: gray;
+}
+
+/* Materials section */
+.materials-display {
+  display: none;
+  /* Hidden by default */
+  flex-wrap: wrap;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.material {
+  flex: 1 0 auto;
+  /* Fill the space equally */
+  height: 50px;
+  /* Height of each material square */
+  cursor: pointer;
+  border: none;
+  /* Remove borders for seamless appearance */
+  box-sizing: border-box;
+  background-size: cover;
+  /* Ensure background images cover the square */
+  transition: transform 0.2s;
+}
+
+.material:hover {
+  transform: scale(1.1);
+}
+
+.colors,
+.materials-display {
+  display: none;
+  /* Hide both sections initially */
+}
+
+.colors.show,
+.materials-display.show {
+  display: flex;
+  /* Show section when it has 'show' class */
+}
+
+.material {
+  width: 50px;
+  height: 50px;
+  display: inline-block;
+  background-size: cover;
+  /* Ensure background images cover the div */
 }
