@@ -289,7 +289,10 @@ function setCurrentObject() {
     currentIntersect = currentObject;
 
     // Update the main text to reflect the current object using the mapping
-    document.getElementById('main-text').innerText = `Edit  ${objectNameMapping[currentObjectName] || currentObjectName}`;
+    document.getElementById('main-text').innerText = `Edit ${objectNameMapping[currentObjectName] || currentObjectName}`;
+
+    // Update the step indicator
+    document.getElementById('current-step').innerText = currentStep + 1; // +1 to make it 1-indexed
 
     // Log the current object name
     console.log(`Interacting with: ${currentObjectName}`);

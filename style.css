@@ -86,12 +86,9 @@ h1#main-text {
 
 .color {
   flex: 1 0 auto;
-  /* Makes each color fill the space equally */
   height: 50px;
-  /* Height of each square */
   cursor: pointer;
   border: none;
-  /* Remove borders for seamless appearance */
   box-sizing: border-box;
   transition: transform 0.2s;
 }
@@ -148,7 +145,6 @@ h1#main-text {
 /* Materials section */
 .materials-display {
   display: none;
-  /* Hidden by default */
   flex-wrap: wrap;
   width: 100%;
   margin: 0;
@@ -158,15 +154,11 @@ h1#main-text {
 
 .material {
   flex: 1 0 auto;
-  /* Fill the space equally */
   height: 50px;
-  /* Height of each material square */
   cursor: pointer;
   border: none;
-  /* Remove borders for seamless appearance */
   box-sizing: border-box;
   background-size: cover;
-  /* Ensure background images cover the square */
   transition: transform 0.2s;
 }
 
@@ -177,13 +169,11 @@ h1#main-text {
 .colors,
 .materials-display {
   display: none;
-  /* Hide both sections initially */
 }
 
 .colors.show,
 .materials-display.show {
   display: flex;
-  /* Show section when it has 'show' class */
 }
 
 .material {
@@ -191,5 +181,18 @@ h1#main-text {
   height: 50px;
   display: inline-block;
   background-size: cover;
-  /* Ensure background images cover the div */
+}
+
+/* Step Indicator Styling */
+#step-indicator {
+  font-size: 1.2em;
+  margin: 10px 0;
+  text-align: center;
+  color: #333;
+  font-weight: bold;
+  margin-right: 20px;
+}
+
+#step-indicator span {
+  color: #ffffff;
 }
