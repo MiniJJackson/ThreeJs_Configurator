@@ -3,6 +3,9 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import * as dat from 'dat.gui';
 import gsap from 'gsap';
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
 
 // Renderer setup
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -95,6 +98,39 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
+
+window.addEventListener('click', onMouseClick);
+
+function onMouseClick(event) {
+  // Normalize mouse coordinates to (-1, 1)
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  // Update the raycaster with camera and mouse position
+  raycaster.setFromCamera(mouse, camera);
+
+  // Calculate intersected objects
+  const intersects = raycaster.intersectObjects(sneakerModel.children, true);
+
+  if (intersects.length > 0) {
+    // Get the first intersected object
+    const intersectedObject = intersects[0].object;
+
+    // Set currentIntersect to the clicked object
+    currentIntersect = intersectedObject;
+
+    // Determine the step based on the object's name
+    const objectName = intersectedObject.name;
+    const stepIndex = objectsInOrder.indexOf(objectName);
+
+    if (stepIndex !== -1) {
+      currentStep = stepIndex;
+      setCurrentObject();
+    } else {
+      console.log(`Clicked on: ${objectName}, but it's not part of the customizable objects.`);
+    }
+  }
+}
 
 // Load the GLTF model for the pillar
 const standLoader = new GLTFLoader().setPath('/models/pillar/');
