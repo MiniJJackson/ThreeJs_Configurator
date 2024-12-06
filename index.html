@@ -19,13 +19,12 @@
         <div class="top-bar">
           <button id="prev-button">Previous</button>
           <h1 id="main-text">Edit Layer</h1>
-          <div id="step-indicator">
-            Step: <span id="current-step">1</span> / 5
-          </div>
+          <div id="step-indicator">Step: <span id="current-step">1</span> / 5</div>
           <button id="next-button">Next</button>
           <button id="material-button">Material</button>
         </div>
         <div class="colors show"> <!-- Show colors by default -->
+          <!-- Color buttons -->
           <a href="#" data-color="white" class="color" style="background-color: white;"></a>
           <a href="#" data-color="red" class="color" style="background-color: red;"></a>
           <a href="#" data-color="orange" class="color" style="background-color: orange;"></a>
@@ -39,6 +38,7 @@
           <a href="#" data-color="gray" class="color" style="background-color: gray;"></a>
         </div>
         <div class="materials-display" id="materials-section">
+          <!-- Material buttons -->
           <a href="#" data-material="army" class="material"
             style="background-image: url('/shoeMaterial/army.jpg');"></a>
           <a href="#" data-material="crocodile" class="material"
@@ -65,22 +65,18 @@
         <div class="form-content">
           <h2>Complete Your Order</h2>
           <label for="name">Name & Surname</label>
-          <input type="text" id="name" placeholder="Enter your name and surname">
-
+          <input type="text" id="name" placeholder="Enter your name and surname" required>
           <label for="email">Email</label>
-          <input type="email" id="email" placeholder="Enter your email">
-
+          <input type="email" id="email" placeholder="Enter your email" required>
           <label for="shoe-size">EU Shoe Size</label>
-          <input type="number" id="shoe-size" placeholder="Enter your shoe size">
-
+          <input type="number" id="shoe-size" placeholder="Enter your shoe size" min="35" max="50" required>
           <label for="address">Address</label>
-          <textarea id="address" placeholder="Street, house number, village, postal code"></textarea>
-
+          <textarea id="address" placeholder="Street, house number, village, postal code" required></textarea>
           <input type="hidden" id="shoe-configuration">
-
           <button id="complete-order-button">Complete Order</button>
         </div>
       </div>
+
       <script type="module" src="src/main.js"></script>
       <script type="module">
         document.addEventListener("DOMContentLoaded", () => {
@@ -97,19 +93,15 @@
           colorsDiv.classList.add("show"); // Show colors by default
           materialsDisplay.classList.remove("show"); // Hide materials by default
 
+          // Toggle color/material selection
           materialButton.addEventListener("click", () => {
-            // Toggle visibility based on the current state
-            if (colorsDiv.classList.contains("show")) {
-              colorsDiv.classList.remove("show"); // Hide colors
-              materialsDisplay.classList.add("show"); // Show materials
-              materialButton.textContent = "Color"; // Change button text to "Color"
-            } else {
-              colorsDiv.classList.add("show"); // Show colors
-              materialsDisplay.classList.remove("show"); // Hide materials
-              materialButton.textContent = "Material"; // Change button text back to "Material"
-            }
+            const isShowingColors = colorsDiv.classList.contains("show");
+            colorsDiv.classList.toggle("show", !isShowingColors);
+            materialsDisplay.classList.toggle("show", isShowingColors);
+            materialButton.textContent = isShowingColors ? "Color" : "Material";
           });
 
+          // Step navigation
           nextButton.addEventListener("click", () => {
             if (currentStep < 5) {
               currentStep++;
@@ -134,6 +126,58 @@
           function showOrderForm() {
             orderForm.classList.add("active"); // Show the order form
           }
+
+          // Complete Order Button Logic
+          const completeOrderButton = document.getElementById("complete-order-button");
+          completeOrderButton.addEventListener("click", (event) => {
+            event.preventDefault(); // Prevent form submission
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const shoeSize = document.getElementById("shoe-size").value;
+            const address = document.getElementById("address").value.trim();
+
+            // Basic validation
+            if (!name || !email || !shoeSize || !address) {
+              alert("Please fill in all fields.");
+              return;
+            }
+
+            // Validate email format
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+              alert("Please enter a valid email address.");
+              return;
+            }
+
+            // Send the order to the server (Assuming a POST request)
+            const orderData = {
+              name: name,
+              email: email,
+              shoeSize: shoeSize,
+              address: address,
+              configuration: document.getElementById("shoe-configuration").value
+            };
+
+            fetch("/submit-order", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(orderData)
+            })
+              .then(response => {
+                if (response.ok) {
+                  alert("Order completed successfully!");
+                  orderForm.classList.remove("active"); // Hide order form
+                } else {
+                  alert("There was a problem completing your order.");
+                }
+              })
+              .catch(error => {
+                console.error("Error:", error);
+                alert("There was a problem with your order. Please try again.");
+              });
+          });
         });
       </script>
     </div>
