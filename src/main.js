@@ -234,6 +234,25 @@ const objectsInOrder = ["Object_2", "Object_3", "Object_4", "Object_5"]; // Repl
 let currentStep = 0; // Keep track of the current object step
 let currentIntersect = null; // Current object to interact with
 
+// Function to show the overlay
+function showOverlay() {
+  const overlay = document.createElement('div');
+  overlay.id = 'overlay';
+  overlay.style.position = 'fixed';
+  overlay.style.top = 0;
+  overlay.style.left = 0;
+  overlay.style.width = '100%';
+  overlay.style.height = '100%';
+  overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+  overlay.style.color = '#fff';
+  overlay.style.fontSize = '2em';
+  overlay.style.display = 'flex';
+  overlay.style.alignItems = 'center';
+  overlay.style.justifyContent = 'center';
+  overlay.textContent = "Your order has been sent!"; // Customize this text if needed
+  document.body.appendChild(overlay);
+}
+
 function setDefaultColor(model) {
   model.traverse((child) => {
     if (child.isMesh) {
@@ -321,6 +340,14 @@ document.getElementById('prev-button').addEventListener('click', () => {
   } else {
     console.log("No previous objects to interact with.");
   }
+});
+
+// Add this below your existing button event listeners
+const completeOrderButton = document.getElementById('complete-order-button');
+
+completeOrderButton.addEventListener('click', () => {
+  showOverlay(); // Show the overlay when the button is clicked
+  // You can add any additional logic here, like submitting a form or other actions.
 });
 
 // Color change for sneaker only
