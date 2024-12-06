@@ -59,6 +59,10 @@ const materials = {
   glitter: textureLoader.load('/shoeMaterial/glitter.jpg'),
   leather: textureLoader.load('/shoeMaterial/leather.jpg'),
   leopard: textureLoader.load('/shoeMaterial/leopard.jpg'),
+  blocked: textureLoader.load('/shoeMaterial/blocked.jpg'),
+  zebra: textureLoader.load('/shoeMaterial/zebra.jpg'),
+  flower: textureLoader.load('/shoeMaterial/flower.jpg'),
+  pizza: textureLoader.load('/shoeMaterial/pizza.jpg')
 };
 
 // Mapping of object names to descriptive names
