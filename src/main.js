@@ -342,14 +342,6 @@ document.getElementById('prev-button').addEventListener('click', () => {
   }
 });
 
-// Add this below your existing button event listeners
-const completeOrderButton = document.getElementById('complete-order-button');
-
-completeOrderButton.addEventListener('click', () => {
-  showOverlay(); // Show the overlay when the button is clicked
-  // You can add any additional logic here, like submitting a form or other actions.
-});
-
 // Color change for sneaker only
 document.querySelectorAll('.color').forEach((color) => {
   color.addEventListener('click', (event) => {
@@ -366,6 +358,48 @@ document.querySelectorAll('.color').forEach((color) => {
     }
   });
 });
+
+// Function to complete the order and make an API call
+function completeOrder() {
+  // Check if an object is selected
+  if (!currentIntersect) {
+    alert('Please select a part of the shoe to customize before completing your order.');
+    return;
+  }
+
+  // Prepare the order data
+  const orderData = {
+    step: currentStep,
+    material: currentIntersect.material.map ? currentIntersect.material.map.image.src : null,
+    color: currentIntersect.material.color.getHexString(),
+  };
+
+  console.log('Order data being sent:', orderData); // Debugging log
+
+  // Make the API call to the correct URL
+  fetch('https://build-configurator-back-end.onrender.com/api/v1/orders', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(orderData),
+  })
+    .then(response => {
+      console.log('Response status:', response.status); // Log response status
+      if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Order completed successfully:', data);
+      showOverlay(); // Show the success overlay
+    })
+    .catch(error => {
+      console.error('There was a problem with the fetch operation:', error);
+      alert('There was an error completing your order. Please try again.'); // Error handling
+    });
+}
 
 // Animation variables
 let hoverDirection = 1;
