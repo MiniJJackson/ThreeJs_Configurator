@@ -126,10 +126,29 @@
               orderForm.classList.add("active"); // Show the order form
             }
 
+            // Event listeners for color selection
+            document.querySelectorAll('.colors .color').forEach(color => {
+              color.addEventListener('click', (event) => {
+                event.preventDefault(); // Prevent default anchor behavior
+                document.querySelectorAll('.colors .color').forEach(c => c.classList.remove('active'));
+                color.classList.add('active'); // Mark the selected color as active
+              });
+            });
+
+            // Event listeners for material selection
+            document.querySelectorAll('#materials-section .material').forEach(material => {
+              material.addEventListener('click', (event) => {
+                event.preventDefault(); // Prevent default anchor behavior
+                document.querySelectorAll('#materials-section .material').forEach(m => m.classList.remove('active'));
+                material.classList.add('active'); // Mark the selected material as active
+              });
+            });
+
             // Complete Order Button Logic
             const completeOrderButton = document.getElementById("complete-order-button");
             completeOrderButton.addEventListener("click", (event) => {
               event.preventDefault(); // Prevent form submission
+
               const name = document.getElementById("name").value.trim();
               const email = document.getElementById("email").value.trim();
               const shoeSize = document.getElementById("shoe-size").value;
@@ -149,25 +168,31 @@
               }
 
               // Gather heel configuration (color and material)
-              const heelColor = [...document.querySelectorAll('.colors .color.active')]
-                .map(color => color.dataset.color)[0] || 'none selected';
-              const heelMaterial = [...document.querySelectorAll('#materials-section .material.active')]
-                .map(material => material.dataset.material)[0] || 'none selected';
+              const layers = {};
+              const materialKeys = ['Object_2', 'Object_3', 'Object_4', 'Object_5'];
+              materialKeys.forEach(key => {
+                const color = [...document.querySelectorAll('.colors .color.active')]
+                  .map(color => color.dataset.color)[0] || 'none selected';
+                const material = [...document.querySelectorAll('#materials-section .material.active')]
+                  .map(material => material.dataset.material)[0] || 'none selected';
 
-              // Send the order to the server (Assuming a POST request)
+                layers[key] = {
+                  color: color,
+                  material: material
+                };
+              });
+
+              // Create an order data object
               const orderData = {
-                name: name,
-                email: email,
+                customerName: name,
+                customerEmail: email,
                 shoeSize: shoeSize,
                 address: address,
-                heelLayers: {
-                  color: heelColor,
-                  material: heelMaterial
-                },
-                modelType: "heel"
+                modelType: "heel",
+                layers: layers
               };
 
-              // Change the URL to the correct API endpoint
+              // Send the order to the server (Assuming a POST request)
               fetch("https://build-configurator-back-end.onrender.com/api/v1/orders", {
                 method: "POST",
                 headers: {
@@ -186,6 +211,15 @@
                   alert("Order completed successfully!");
                   console.log("Order response data:", data); // Log the response data
                   orderForm.classList.remove("active"); // Hide the order form after successful submission
+                  // Reset form fields
+                  document.getElementById("name").value = "";
+                  document.getElementById("email").value = "";
+                  document.getElementById("shoe-size").value = "";
+                  document.getElementById("address").value = "";
+                  document.querySelectorAll('.colors .color').forEach(c => c.classList.remove('active'));
+                  document.querySelectorAll('#materials-section .material').forEach(m => m.classList.remove('active'));
+                  currentStep = 1; // Reset step
+                  updateStepIndicator();
                 })
                 .catch(error => {
                   console.error("Error:", error);
