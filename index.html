@@ -58,128 +58,143 @@
           <a href="#" data-material="pizza" class="material"
             style="background-image: url('/shoeMaterial/pizza.jpg');"></a>
         </div>
-      </div>
 
-      <!-- Order Form Popup -->
-      <div id="order-form" class="order-form">
-        <div class="form-content">
-          <h2>Complete Your Order</h2>
-          <label for="name">Name & Surname</label>
-          <input type="text" id="name" placeholder="Enter your name and surname" required>
-          <label for="email">Email</label>
-          <input type="email" id="email" placeholder="Enter your email" required>
-          <label for="shoe-size">EU Shoe Size</label>
-          <input type="number" id="shoe-size" placeholder="Enter your shoe size" min="35" max="50" required>
-          <label for="address">Address</label>
-          <textarea id="address" placeholder="Street, house number, village, postal code" required></textarea>
-          <input type="hidden" id="shoe-configuration">
-          <button id="complete-order-button">Complete Order</button>
+        <!-- Order Form Popup -->
+        <div id="order-form" class="order-form">
+          <div class="form-content">
+            <h2>Complete Your Order</h2>
+            <label for="name">Name & Surname</label>
+            <input type="text" id="name" placeholder="Enter your name and surname" required>
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Enter your email" required>
+            <label for="shoe-size">EU Shoe Size</label>
+            <input type="number" id="shoe-size" placeholder="Enter your shoe size" min="35" max="50" required>
+            <label for="address">Address</label>
+            <textarea id="address" placeholder="Street, house number, village, postal code" required></textarea>
+            <input type="hidden" id="shoe-configuration">
+            <button id="complete-order-button">Complete Order</button>
+          </div>
         </div>
-      </div>
 
-      <script type="module" src="src/main.js"></script>
-      <script type="module">
-        document.addEventListener("DOMContentLoaded", () => {
-          const materialButton = document.getElementById("material-button");
-          const colorsDiv = document.querySelector(".colors");
-          const materialsDisplay = document.getElementById("materials-section");
-          const nextButton = document.getElementById("next-button");
-          const prevButton = document.getElementById("prev-button");
-          const currentStepElement = document.getElementById("current-step");
-          const orderForm = document.getElementById("order-form");
-          let currentStep = 1;
+        <script type="module" src="src/main.js"></script>
+        <script type="module">
+          document.addEventListener("DOMContentLoaded", () => {
+            const materialButton = document.getElementById("material-button");
+            const colorsDiv = document.querySelector(".colors");
+            const materialsDisplay = document.getElementById("materials-section");
+            const nextButton = document.getElementById("next-button");
+            const prevButton = document.getElementById("prev-button");
+            const currentStepElement = document.getElementById("current-step");
+            const orderForm = document.getElementById("order-form");
+            let currentStep = 1;
 
-          // Initial setup
-          colorsDiv.classList.add("show"); // Show colors by default
-          materialsDisplay.classList.remove("show"); // Hide materials by default
+            // Initial setup
+            colorsDiv.classList.add("show"); // Show colors by default
+            materialsDisplay.classList.remove("show"); // Hide materials by default
 
-          // Toggle color/material selection
-          materialButton.addEventListener("click", () => {
-            const isShowingColors = colorsDiv.classList.contains("show");
-            colorsDiv.classList.toggle("show", !isShowingColors);
-            materialsDisplay.classList.toggle("show", isShowingColors);
-            materialButton.textContent = isShowingColors ? "Color" : "Material";
-          });
+            // Toggle color/material selection
+            materialButton.addEventListener("click", () => {
+              const isShowingColors = colorsDiv.classList.contains("show");
+              colorsDiv.classList.toggle("show", !isShowingColors);
+              materialsDisplay.classList.toggle("show", isShowingColors);
+              materialButton.textContent = isShowingColors ? "Material" : "Color";
+            });
 
-          // Step navigation
-          nextButton.addEventListener("click", () => {
-            if (currentStep < 5) {
-              currentStep++;
-              updateStepIndicator();
-            }
-            if (currentStep === 5) {
-              showOrderForm();
-            }
-          });
+            // Step navigation
+            nextButton.addEventListener("click", () => {
+              if (currentStep < 5) {
+                currentStep++;
+                updateStepIndicator();
+              }
+              if (currentStep === 5) {
+                showOrderForm();
+              }
+            });
 
-          prevButton.addEventListener("click", () => {
-            if (currentStep > 1) {
-              currentStep--;
-              updateStepIndicator();
-            }
-          });
+            prevButton.addEventListener("click", () => {
+              if (currentStep > 1) {
+                currentStep--;
+                updateStepIndicator();
+              }
+            });
 
-          function updateStepIndicator() {
-            currentStepElement.textContent = currentStep;
-          }
-
-          function showOrderForm() {
-            orderForm.classList.add("active"); // Show the order form
-          }
-
-          // Complete Order Button Logic
-          const completeOrderButton = document.getElementById("complete-order-button");
-          completeOrderButton.addEventListener("click", (event) => {
-            event.preventDefault(); // Prevent form submission
-            const name = document.getElementById("name").value.trim();
-            const email = document.getElementById("email").value.trim();
-            const shoeSize = document.getElementById("shoe-size").value;
-            const address = document.getElementById("address").value.trim();
-
-            // Basic validation
-            if (!name || !email || !shoeSize || !address) {
-              alert("Please fill in all fields.");
-              return;
+            function updateStepIndicator() {
+              currentStepElement.textContent = currentStep;
             }
 
-            // Validate email format
-            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailPattern.test(email)) {
-              alert("Please enter a valid email address.");
-              return;
+            function showOrderForm() {
+              orderForm.classList.add("active"); // Show the order form
             }
 
-            // Send the order to the server (Assuming a POST request)
-            const orderData = {
-              name: name,
-              email: email,
-              shoeSize: shoeSize,
-              address: address,
-              configuration: document.getElementById("shoe-configuration").value
-            };
+            // Complete Order Button Logic
+            const completeOrderButton = document.getElementById("complete-order-button");
+            completeOrderButton.addEventListener("click", (event) => {
+              event.preventDefault(); // Prevent form submission
+              const name = document.getElementById("name").value.trim();
+              const email = document.getElementById("email").value.trim();
+              const shoeSize = document.getElementById("shoe-size").value;
+              const address = document.getElementById("address").value.trim();
 
-            fetch("/submit-order", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              body: JSON.stringify(orderData)
-            })
-              .then(response => {
-                if (response.ok) {
-                  alert("Order completed successfully!");
-                  orderForm.classList.remove("active"); // Hide order form
-                } else {
-                  alert("There was a problem completing your order.");
-                }
+              // Basic validation
+              if (!name || !email || !shoeSize || !address) {
+                alert("Please fill in all fields.");
+                return;
+              }
+
+              // Validate email format
+              const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+              if (!emailPattern.test(email)) {
+                alert("Please enter a valid email address.");
+                return;
+              }
+
+              // Gather heel configuration (color and material)
+              const heelColor = [...document.querySelectorAll('.colors .color.active')]
+                .map(color => color.dataset.color)[0] || 'none selected';
+              const heelMaterial = [...document.querySelectorAll('#materials-section .material.active')]
+                .map(material => material.dataset.material)[0] || 'none selected';
+
+              // Send the order to the server (Assuming a POST request)
+              const orderData = {
+                name: name,
+                email: email,
+                shoeSize: shoeSize,
+                address: address,
+                heelLayers: {
+                  color: heelColor,
+                  material: heelMaterial
+                },
+                modelType: "heel"
+              };
+
+              // Change the URL to the correct API endpoint
+              fetch("https://build-configurator-back-end.onrender.com/api/v1/orders", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify(orderData)
               })
-              .catch(error => {
-                console.error("Error:", error);
-                alert("There was a problem with your order. Please try again.");
-              });
+                .then(response => {
+                  if (response.ok) {
+                    return response.json(); // Parse JSON only if the response is OK
+                  } else {
+                    throw new Error('Network response was not ok: ' + response.statusText);
+                  }
+                })
+                .then(data => {
+                  alert("Order completed successfully!");
+                  console.log("Order response data:", data); // Log the response data
+                  orderForm.classList.remove("active"); // Hide the order form after successful submission
+                })
+                .catch(error => {
+                  console.error("Error:", error);
+                  alert("There was a problem with your order. Please try again.");
+                });
+            });
           });
-        });
-      </script>
+        </script>
+      </div>
     </div>
   </div>
 </body>
