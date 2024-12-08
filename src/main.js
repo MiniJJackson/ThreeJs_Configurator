@@ -276,6 +276,14 @@ document.addEventListener('DOMContentLoaded', () => {
       materialsDisplay.style.display = 'flex'; // Show materials
     }
   });
+  const closeOrderFormButton = document.getElementById("close-order-form");
+  const orderForm = document.getElementById("order-form");
+
+  // Event listener to close the overlay
+  closeOrderFormButton.addEventListener("click", () => {
+      orderForm.classList.remove("active"); // Hide the overlay
+  });
+
 });
 
 // After sneakerModel is loaded and currentObject is set, add event listeners for materials
@@ -321,65 +329,43 @@ function setCurrentObject() {
     console.log(`Interacting with: ${currentObjectName}`);
   }
 }
+const placeOrderButton = document.getElementById('place-order-button');
+const orderForm = document.getElementById('order-form');
+const currentStepElement = document.getElementById('current-step');
 
-// Set up click event for the next object
+
+// Update the step navigation logic
+function updateStepIndicator() {
+    currentStepElement.textContent = currentStep + 1; // Update the step display
+    if (currentStep === 4) { // Step 5 is zero-indexed 4
+        placeOrderButton.style.display = 'inline-block';
+        placeOrderButton.addEventListener('click', () => {
+            orderForm.classList.add('active'); // Show the order form
+        });
+    } else {
+        placeOrderButton.style.display = 'none';
+    }
+}
+
+// Adjust existing step navigation events
 document.getElementById('next-button').addEventListener('click', () => {
-  if (currentStep < objectsInOrder.length - 1) {
-    currentStep++;
-    setCurrentObject();
-  }else if (currentStep === objectsInOrder.length - 1) {
-    // Hide colors section and show the complete order button
-    document.querySelector('.colors').style.display = 'none';
-    const completeOrderButton = document.createElement('button');
-    completeOrderButton.id = 'complete-order-button';
-    completeOrderButton.textContent = 'Order this shoe';
-    completeOrderButton.style.padding = '10px 20px';
-    completeOrderButton.style.fontSize = '16px';
-    completeOrderButton.style.cursor = 'pointer';
-    completeOrderButton.style.marginTop = '10px auto';
-    completeOrderButton.style.borderRadius = '5px';
-    completeOrderButton.style.backgroundColor = '#000000';
-    completeOrderButton.style.color = '#6af244';
-    completeOrderButton.style.display = 'block';
-
-    completeOrderButton.addEventListener('click', () => {
-      document.getElementById('order-form').classList.add('active');
-    });
-
-
-     // Append the button to the configurator settings container
-     const configuratorSettings = document.querySelector('.configurator-settings');
-     if (configuratorSettings) {
-       configuratorSettings.appendChild(completeOrderButton);
-       console.log('Complete Order button added successfully.');
-     } else {
-       console.error('Configurator settings container not found.');
-     }
-    currentStep++;
-  }
+    if (currentStep < 4) { // 5 steps total, zero-indexed
+        currentStep++;
+        updateStepIndicator();
+    } else {
+        console.log('No more steps.');
+    }
 });
 
-// Set up click event for the previous object
 document.getElementById('prev-button').addEventListener('click', () => {
-  if (currentStep > 0) {
-    currentStep--;
-        // If we navigate away from the final step
-        if (currentStep < 5) {
-          // Remove the complete order button if it exists
-          const completeOrderButton = document.getElementById('complete-order-button');
-          if (completeOrderButton) {
-            completeOrderButton.remove();
-          }
-    
-          // Show the colors section
-          document.querySelector('.colors').style.display = 'flex';
-        }
-
-    setCurrentObject();
-  } else {
-    console.log("No previous objects to interact with.");
-  }
+    if (currentStep > 0) {
+        currentStep--;
+        updateStepIndicator();
+    } else {
+        console.log('No previous steps.');
+    }
 });
+
 
 // Color change for sneaker only
 document.querySelectorAll('.color').forEach((color) => {
