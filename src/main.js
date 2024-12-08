@@ -67,10 +67,10 @@ const materials = {
 
 // Mapping of object names to descriptive names
 const objectNameMapping = {
-  "Object_2": " insole and ankle band",
+  "Object_2": " insole and ankle",
   "Object_3": "heart and heel",
   "Object_4": "straps",
-  "Object_5": "sole"
+  "Object_5": "material sole"
 };
 
 // Camera setup
@@ -312,7 +312,7 @@ function setCurrentObject() {
     currentIntersect = currentObject;
 
     // Update the main text to reflect the current object using the mapping
-    document.getElementById('main-text').innerText = `Edit ${objectNameMapping[currentObjectName] || currentObjectName}`;
+    document.getElementById('main-text').innerText = `Change ${objectNameMapping[currentObjectName] || currentObjectName}`;
 
     // Update the step indicator
     document.getElementById('current-step').innerText = currentStep + 1; // +1 to make it 1-indexed
