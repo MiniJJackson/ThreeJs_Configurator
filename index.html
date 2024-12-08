@@ -11,6 +11,8 @@
 <body>
   <header>
     <img src="/logo/SWEAR_Logo.webp" alt="Logo" class="logo">
+    <button id="place-order-button" style="display: none;">Place Order</button>
+
   </header>
 
   <div class="schoe-configurator">
@@ -22,6 +24,7 @@
           <div id="step-indicator">Step: <span id="current-step">1</span> / 5</div>
           <button id="next-button">Next</button>
           <button id="material-button">Material</button>
+          <button id="place-order-button" style="display: none;">Place Order</button>
         </div>
         <div class="colors show"> <!-- Show colors by default -->
           <!-- Color buttons -->
@@ -62,6 +65,7 @@
         <!-- Order Form Popup -->
         <div id="order-form" class="order-form">
           <div class="form-content">
+            <button id="close-order-form" class="close-button">X</button>
             <h2>Complete Your Order</h2>
             <label for="name">Name & Surname</label>
             <input type="text" id="name" placeholder="Enter your name and surname" required>
@@ -75,6 +79,7 @@
             <button id="complete-order-button">Send order</button>
           </div>
         </div>
+        
 
         <script type="module" src="src/main.js"></script>
         <script type="module">
