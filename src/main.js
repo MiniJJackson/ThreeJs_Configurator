@@ -327,8 +327,35 @@ document.getElementById('next-button').addEventListener('click', () => {
   if (currentStep < objectsInOrder.length - 1) {
     currentStep++;
     setCurrentObject();
-  } else {
-    console.log("No more objects to interact with.");
+  }else if (currentStep === objectsInOrder.length - 1) {
+    // Hide colors section and show the complete order button
+    document.querySelector('.colors').style.display = 'none';
+    const completeOrderButton = document.createElement('button');
+    completeOrderButton.id = 'complete-order-button';
+    completeOrderButton.textContent = 'Order this shoe';
+    completeOrderButton.style.padding = '10px 20px';
+    completeOrderButton.style.fontSize = '16px';
+    completeOrderButton.style.cursor = 'pointer';
+    completeOrderButton.style.marginTop = '10px auto';
+    completeOrderButton.style.borderRadius = '5px';
+    completeOrderButton.style.backgroundColor = '#000000';
+    completeOrderButton.style.color = '#6af244';
+    completeOrderButton.style.display = 'block';
+
+    completeOrderButton.addEventListener('click', () => {
+      document.getElementById('order-form').classList.add('active');
+    });
+
+
+     // Append the button to the configurator settings container
+     const configuratorSettings = document.querySelector('.configurator-settings');
+     if (configuratorSettings) {
+       configuratorSettings.appendChild(completeOrderButton);
+       console.log('Complete Order button added successfully.');
+     } else {
+       console.error('Configurator settings container not found.');
+     }
+    currentStep++;
   }
 });
 
@@ -336,6 +363,18 @@ document.getElementById('next-button').addEventListener('click', () => {
 document.getElementById('prev-button').addEventListener('click', () => {
   if (currentStep > 0) {
     currentStep--;
+        // If we navigate away from the final step
+        if (currentStep < 5) {
+          // Remove the complete order button if it exists
+          const completeOrderButton = document.getElementById('complete-order-button');
+          if (completeOrderButton) {
+            completeOrderButton.remove();
+          }
+    
+          // Show the colors section
+          document.querySelector('.colors').style.display = 'flex';
+        }
+
     setCurrentObject();
   } else {
     console.log("No previous objects to interact with.");
