@@ -50,18 +50,37 @@ h1 {
   width: 100%;
   padding: 10px 20px;
   box-sizing: border-box;
+  min-height: 80px;
 }
 
 #prev-button,
 #next-button,
 #material-button {
-  padding: 10px 15px;
-  font-size: 16px;
+  padding: 15px 20px;
+  font-size: 14px;
   cursor: pointer;
+  border-radius: 5px;
+  font-weight: 700;
+  margin: 0 10px;
+  background-color: #000000;
+  color: #6af244;
+  border: 2px solid transparent;
 }
 
+#prev-button:hover,
+#next-button:hover{
+  background: #6af244;
+  color: white;
+  border: 2px solid #000000;
+}
+
+#material-button{
+  background-color: #000000;
+  color: #6af244;
+  border: 2px solid #6af244;
+}
 h1#main-text {
-  font-size: 18px;
+  font-size: 1.2rem;
   margin: 0;
   text-align: center;
   flex: 1;
@@ -95,6 +114,7 @@ h1#main-text {
   border: none;
   box-sizing: border-box;
   transition: transform 0.2s;
+  height: 60px;
 }
 
 .color:hover {
@@ -164,6 +184,7 @@ h1#main-text {
   box-sizing: border-box;
   background-size: cover;
   transition: transform 0.2s;
+  height: 60px;
 }
 
 .material:hover {
@@ -189,11 +210,11 @@ h1#main-text {
 
 /* Step Indicator Styling */
 #step-indicator {
-  font-size: 1.2em;
+  font-size: 1.4em;
   margin: 10px 0;
   text-align: center;
-  color: #333;
-  font-weight: bold;
+  color: #000000;
+  font-weight: 800;
   margin-right: 20px;
 }
 
