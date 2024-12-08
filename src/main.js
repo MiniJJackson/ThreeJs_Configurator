@@ -1,8 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import * as dat from 'dat.gui';
-import gsap from 'gsap';
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
@@ -76,7 +74,7 @@ const objectNameMapping = {
 // Camera setup
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0, 0, 5); // Increased Y value for more height
-camera.lookAt(0, 0, 0); // Still looking at the origin
+camera.lookAt(0, 0, 0);
 
 // Controls setup
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -230,7 +228,7 @@ loader.load('scene.gltf', (gltf) => {
 });
 
 // Step-wise interaction management
-const objectsInOrder = ["Object_2", "Object_3", "Object_4", "Object_5"]; // Replace with your actual object names
+const objectsInOrder = ["Object_2", "Object_3", "Object_4", "Object_5"];
 let currentStep = 0; // Keep track of the current object step
 let currentIntersect = null; // Current object to interact with
 
@@ -249,7 +247,7 @@ function showOverlay() {
   overlay.style.display = 'flex';
   overlay.style.alignItems = 'center';
   overlay.style.justifyContent = 'center';
-  overlay.textContent = "Your order has been sent!"; // Customize this text if needed
+  overlay.textContent = "Your order has been sent!";
   document.body.appendChild(overlay);
 }
 
@@ -315,7 +313,7 @@ function setCurrentObject() {
     document.getElementById('main-text').innerText = `Change ${objectNameMapping[currentObjectName] || currentObjectName}`;
 
     // Update the step indicator
-    document.getElementById('current-step').innerText = currentStep + 1; // +1 to make it 1-indexed
+    document.getElementById('current-step').innerText = currentStep + 1;
 
     // Log the current object name
     console.log(`Interacting with: ${currentObjectName}`);
@@ -327,7 +325,7 @@ document.getElementById('next-button').addEventListener('click', () => {
   if (currentStep < objectsInOrder.length - 1) {
     currentStep++;
     setCurrentObject();
-  }else if (currentStep === objectsInOrder.length - 1) {
+  } else if (currentStep === objectsInOrder.length - 1) {
     // Hide colors section and show the complete order button
     document.querySelector('.colors').style.display = 'none';
     const completeOrderButton = document.createElement('button');
@@ -347,14 +345,14 @@ document.getElementById('next-button').addEventListener('click', () => {
     });
 
 
-     // Append the button to the configurator settings container
-     const configuratorSettings = document.querySelector('.configurator-settings');
-     if (configuratorSettings) {
-       configuratorSettings.appendChild(completeOrderButton);
-       console.log('Complete Order button added successfully.');
-     } else {
-       console.error('Configurator settings container not found.');
-     }
+    // Append the button to the configurator settings container
+    const configuratorSettings = document.querySelector('.configurator-settings');
+    if (configuratorSettings) {
+      configuratorSettings.appendChild(completeOrderButton);
+      console.log('Complete Order button added successfully.');
+    } else {
+      console.error('Configurator settings container not found.');
+    }
     currentStep++;
   }
 });
@@ -363,17 +361,17 @@ document.getElementById('next-button').addEventListener('click', () => {
 document.getElementById('prev-button').addEventListener('click', () => {
   if (currentStep > 0) {
     currentStep--;
-        // If we navigate away from the final step
-        if (currentStep < 5) {
-          // Remove the complete order button if it exists
-          const completeOrderButton = document.getElementById('complete-order-button');
-          if (completeOrderButton) {
-            completeOrderButton.remove();
-          }
-    
-          // Show the colors section
-          document.querySelector('.colors').style.display = 'flex';
-        }
+    // If we navigate away from the final step
+    if (currentStep < 5) {
+      // Remove the complete order button if it exists
+      const completeOrderButton = document.getElementById('complete-order-button');
+      if (completeOrderButton) {
+        completeOrderButton.remove();
+      }
+
+      // Show the colors section
+      document.querySelector('.colors').style.display = 'flex';
+    }
 
     setCurrentObject();
   } else {
@@ -413,8 +411,6 @@ function completeOrder() {
     color: currentIntersect.material.color.getHexString(),
   };
 
-  console.log('Order data being sent:', orderData); // Debugging log
-
   // Make the API call to the correct URL
   fetch('https://build-configurator-back-end.onrender.com/api/v1/orders', {
     method: 'POST',
@@ -424,7 +420,6 @@ function completeOrder() {
     body: JSON.stringify(orderData),
   })
     .then(response => {
-      console.log('Response status:', response.status); // Log response status
       if (!response.ok) {
         throw new Error(`Network response was not ok: ${response.statusText}`);
       }
