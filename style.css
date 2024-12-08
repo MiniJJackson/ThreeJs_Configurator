@@ -65,6 +65,7 @@ h1 {
   background-color: #000000;
   color: #6af244;
   border: 2px solid transparent;
+  width: 100px;
 }
 
 #prev-button:hover,
@@ -74,11 +75,6 @@ h1 {
   border: 2px solid #000000;
 }
 
-#material-button{
-  background-color: #000000;
-  color: #6af244;
-  border: 2px solid #6af244;
-}
 h1#main-text {
   font-size: 1.2rem;
   margin: 0;
@@ -114,7 +110,6 @@ h1#main-text {
   border: none;
   box-sizing: border-box;
   transition: transform 0.2s;
-  height: 60px;
 }
 
 .color:hover {
@@ -184,7 +179,6 @@ h1#main-text {
   box-sizing: border-box;
   background-size: cover;
   transition: transform 0.2s;
-  height: 60px;
 }
 
 .material:hover {
@@ -224,6 +218,7 @@ h1#main-text {
 
 /* Order Form Styling */
 .order-form {
+  font-family: 'Helvetica', sans-serif;
   position: fixed;
   bottom: -100%;
   left: 0;

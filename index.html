@@ -72,7 +72,7 @@
             <label for="address">Address</label>
             <textarea id="address" placeholder="Street, house number, village, postal code" required></textarea>
             <input type="hidden" id="shoe-configuration">
-            <button id="complete-order-button">Complete Order</button>
+            <button id="complete-order-button">Send order</button>
           </div>
         </div>
 
@@ -97,7 +97,7 @@
               const isShowingColors = colorsDiv.classList.contains("show");
               colorsDiv.classList.toggle("show", !isShowingColors);
               materialsDisplay.classList.toggle("show", isShowingColors);
-              materialButton.textContent = isShowingColors ? "Material" : "Color";
+              materialButton.textContent = isShowingColors ? "Colors" : "Material";
             });
 
             // Step navigation
